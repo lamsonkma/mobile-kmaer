@@ -6,7 +6,6 @@
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { CompositeScreenProps, NavigatorScreenParams } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { IJob } from './constants/interface'
 
 declare global {
   namespace ReactNavigation {
@@ -22,7 +21,9 @@ export type RootStackParamList = {
   SignUp: undefined
   Home: NavigatorScreenParams<RootTabParamList> | undefined
   Splash: undefined
-
+  AddDeviceScreen: undefined
+  ScanQrCode: { setToken(token: string): void }
+  ForgotPassword: undefined
 }
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<
@@ -34,7 +35,8 @@ export type RootTabParamList = {
   RootTab: undefined
   List: undefined
   CV: undefined
-  JobList: undefined
+  Application: undefined
+  Devices: undefined
 }
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> = CompositeScreenProps<

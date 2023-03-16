@@ -41,5 +41,6 @@ module.exports = {
         uploadPreset: process.env.CLOUDINARY_UPLOAD_PRESET,
       },
     },
+    
   },
 }

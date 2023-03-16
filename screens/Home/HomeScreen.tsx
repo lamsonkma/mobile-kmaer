@@ -1,14 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
+import { ListDeviceCard } from '../../components/ListDeviceCard'
 
 export default function HomeScreen() {
-  
-
   return (
     <View style={styles.container}>
-      <Text>
-        Đây là home
-      </Text>
+      <ListDeviceCard />
     </View>
   )
 }

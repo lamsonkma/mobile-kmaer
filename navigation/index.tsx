@@ -25,8 +25,10 @@ import { selectIsLoggedIn, selectLoading } from '../reducers/authSlice'
 import { useAppDispatch, useAppSelector } from '../app/hook'
 import SplashScreen from '../screens/SplashScreen'
 import { GetSelfAction } from '../reducers/userSlice'
-import { ListJobCompanyScreen } from '../screens/CompanyScreen/ListJobCompanyScreen'
 import { useEffect } from 'react'
+import AddDeviceScreen from '../screens/Home/AddDeviceScreen'
+import { ScanQrCode } from '../components/ScanQrCode'
+import { ForgotPasswordScreen } from '../screens/LoginScreen/ForgotPassword'
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -60,18 +62,25 @@ function RootNavigator() {
   }
   return (
     <Stack.Navigator>
-      {!(isLoggedIn && loading === 'success') ? (
+      {isLoggedIn && loading === 'success' ? (
         <>
           <Stack.Screen name="Root" component={RootScreen} options={{ headerShown: false }} />
           <Stack.Screen name="SignIn" component={SignInScreen} options={{ headerShown: false }} />
           <Stack.Screen name="SignUp" component={SignUpScreen} options={{ headerShown: false }} />
+          <Stack.Screen
+            options={{
+              headerTitle: 'Forgot Password',
+            }}
+            name="ForgotPassword"
+            component={ForgotPasswordScreen}
+          />
         </>
       ) : (
         <>
           <Stack.Screen name="Home" component={BottomTabNavigator} options={{ headerShown: false }} />
           <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
-         
-
+          <Stack.Screen name="AddDeviceScreen" component={AddDeviceScreen} options={{ title: 'Add Device' }} />
+          <Stack.Screen name="ScanQrCode" component={ScanQrCode} />
           <Stack.Group screenOptions={{ presentation: 'modal' }}>
             <Stack.Screen name="Modal" component={ModalScreen} />
           </Stack.Group>
@@ -110,29 +119,26 @@ function BottomTabNavigator() {
       }}
     >
       <BottomTab.Screen
-        name="JobList"
+        name="Devices"
         component={HomeScreen}
-        options={({ navigation }: RootTabScreenProps<'JobList'>) => ({
-          title: 'Việc làm',
+        options={({ navigation }: RootTabScreenProps<'Devices'>) => ({
+          title: 'Home',
           headerTitleAlign: 'center',
           headerTintColor: '#333333',
           // tabBarLabelStyle: { color: mainColor },
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="briefcase-variant-outline" size={28} color={color} />
-          ),
-          headerLeft: () => (
+          tabBarIcon: ({ color }) => <MaterialCommunityIcons name="home-analytics" size={28} color={color} />,
+          headerRight: () => (
             <Feather
-              name="bell"
+              name="plus-circle"
               size={25}
               style={{
-                marginLeft: 20,
+                marginRight: 20,
               }}
+              onPress={() => navigation.navigate('AddDeviceScreen')}
             />
           ),
         })}
       />
-     
-     
     </BottomTab.Navigator>
   )
 }
