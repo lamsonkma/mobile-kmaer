@@ -7,14 +7,13 @@ import { TOKEN_EXPIRED_STORAGE_KEY, TOKEN_STORAGE_KEY } from '../constants/stora
 interface ILoginSuccessResponse {
   user: IUser
   token: {
-    accessToken: string
-    accessTokenExpired: string
+    token: string
+    expiresIn: string
   }
 }
 interface IUser {
   email: string
   password: string
-  role: string
 }
 
 interface ILoginPayload {
@@ -40,8 +39,15 @@ export const loginAction = createAsyncThunk('auth/login', async (payload: ILogin
 })
 export const registerAction = createAsyncThunk('auth/register', async (payload: IRegisterPayload) => {
   const { data } = await apiInstance.post<ILoginSuccessResponse>('auth/register', payload)
+  console.log("🚀 ~ file: authSlice.ts:42 ~ registerAction ~ data:", data)
   return data
 })
+
+export const logoutAction = createAsyncThunk('auth/logout', async () => {
+  await AsyncStorage.removeItem(TOKEN_STORAGE_KEY);
+  await AsyncStorage.removeItem(TOKEN_EXPIRED_STORAGE_KEY);
+});
+
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -57,16 +63,26 @@ export const authSlice = createSlice({
           state.loading = 'success'
           state.isLoggedIn = true
           state.user = payload.payload.user
-          AsyncStorage.setItem(TOKEN_STORAGE_KEY, payload.payload.token.accessToken)
-          AsyncStorage.setItem(TOKEN_EXPIRED_STORAGE_KEY, payload.payload.token.accessTokenExpired)
+          AsyncStorage.setItem(TOKEN_STORAGE_KEY, payload.payload.token.token)
+          AsyncStorage.setItem(TOKEN_EXPIRED_STORAGE_KEY, payload.payload.token.expiresIn)
         })
         .addCase(act.rejected, (state, payload) => {
-          console.log('error')
           state.loading = 'error'
           state.error = payload.error.message
-          console.log(payload.error.message)
         })
     })
+    builder
+    .addCase(logoutAction.pending, (state) => {
+      state.loading = 'loading';
+    })
+    .addCase(logoutAction.fulfilled, (state) => {
+      state.isLoggedIn = false;
+      state.loading = 'success';
+    })
+    .addCase(logoutAction.rejected, (state) => {
+      state.loading = 'error';
+    });
+
   },
 })
 export default authSlice.reducer

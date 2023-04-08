@@ -8,21 +8,28 @@ interface IUserState {
   message?: string
   user?: IUser
 }
+
+interface IUpdateUserPayload {
+  name?: string
+  oldPassWord?: string
+  newPassWord?: string
+}
+
 const initialState: IUserState = {
   loading: 'idle',
 }
-export const GetSelfAction = createAsyncThunk('auth/me', async () => {
-  const { data } = await apiInstance.get('auth/me')
+export const GetSelfAction = createAsyncThunk('user/profile', async () => {
+  const { data } = await apiInstance.get('user/profile')
   return data
 })
 
 export const GetSelfActionWithoutEffect = createAsyncThunk('auth/me-without-loading', async () => {
-  const { data } = await apiInstance.get('auth/me')
+  const { data } = await apiInstance.get('user/profile')
   return data
 })
-export const UpdateUserProfileAction = createAsyncThunk('user/profile', async (payload: Partial<IUser>, thunk) => {
-  const { data } = await apiInstance.patch('user/profile', payload)
-  thunk.dispatch(GetSelfActionWithoutEffect())
+export const UpdateUserProfileAction = createAsyncThunk('user/updae', async (payload: IUpdateUserPayload, thunk) => {
+  const { data } = await apiInstance.patch('user', payload)
+  thunk.dispatch(GetSelfAction())
   return data
 })
 const userSlice = createSlice({
@@ -53,7 +60,6 @@ const userSlice = createSlice({
       })
       .addCase(UpdateUserProfileAction.fulfilled, (state, payload) => {
         state.loading = 'success'
-        // state.user = payload.payload
       })
       .addCase(UpdateUserProfileAction.rejected, (state, payload) => {
         state.loading = 'error'

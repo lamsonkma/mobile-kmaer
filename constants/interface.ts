@@ -7,8 +7,6 @@ export interface baseEntity {
 export interface IUser extends baseEntity {
   email: string
   name: string
-  phoneNumber?: string
-
   avatar?: string
 }
 
@@ -19,16 +17,29 @@ export interface IPagination {
 }
 
 export interface IDevice extends baseEntity {
-  name: string
-  image: string
-  tokens?: IToken[]
+  name?: string
+  image?: string
+  token: string
+  applications?: IApplication[]
 }
 
-export interface IApplication extends baseEntity {
+export interface IApplication {
+  id: number
   name: string
-  image: string
+  image?: string
+  package?: string
+  usages?: IUsage[]
+}
+
+export interface IUsage extends baseEntity {
+  dayOfWeek: string
+  totalTimeInForeground: number
 }
 
 export interface IToken extends baseEntity {
   token: string
+}
+
+export interface IWeeklyUsage {
+  [key: string]: number
 }

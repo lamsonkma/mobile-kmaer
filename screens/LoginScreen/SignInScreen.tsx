@@ -20,13 +20,24 @@ import { Input } from '@rneui/base'
 
 const width = Dimensions.get('window').width
 export default function SignInScreen() {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   const navigator = useNavigation()
-  const [username, setUsername] = useState('')
+  const dispatch = useAppDispatch()
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const handleLogin = () => {
-    console.log(`Username: ${username}, Password: ${password}`)
-    // Xử lý logic đăng nhập tại đây
+    if (!email || !password) {
+      alert('Please fill all fields')
+      return
+    }
+
+    if (emailRegex.test(email) === false) {
+      alert('Please enter a valid email')
+      return
+    }
+
+    dispatch(loginAction({ email, password }))
   }
 
   return (
@@ -35,7 +46,7 @@ export default function SignInScreen() {
         <Image source={require('../../assets/images/logo.png')} style={styles.logo} />
       </View>
       <View style={styles.form}>
-        <Input inputStyle={styles.input} placeholder="Username" value={username} onChangeText={setUsername} />
+        <Input inputStyle={styles.input} placeholder="Email" value={email} onChangeText={setEmail} />
         <Input
           placeholder="Password"
           value={password}
@@ -46,7 +57,7 @@ export default function SignInScreen() {
         />
       </View>
       <TouchableOpacity
-        onPress={() => navigator.navigate('ForgotPassword')}
+        onPress={() => navigator.navigate('ForgotPasswordScreen')}
         style={{
           width: '90%',
           alignItems: 'flex-end',

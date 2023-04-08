@@ -29,6 +29,13 @@ import { useEffect } from 'react'
 import AddDeviceScreen from '../screens/Home/AddDeviceScreen'
 import { ScanQrCode } from '../components/ScanQrCode'
 import { ForgotPasswordScreen } from '../screens/LoginScreen/ForgotPassword'
+import { SettingScreen } from '../screens/Setting/SettingScreen'
+import { ListApplicationCard } from '../components/ListApplicationCard'
+import { ChartUsageScreen } from '../screens/Home/ChartUsageScreen'
+import { ProfileScreen } from '../screens/Setting/ProfileScreen'
+import { ChangePasswordScreen } from '../screens/Setting/ChangePasswordScreen'
+import { EditDeviceScreen } from '../screens/Home/EditDeviceScreen'
+import { CalendarScreen } from '../screens/Rule/CalendarScreen'
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -47,11 +54,6 @@ const Stack = createNativeStackNavigator<RootStackParamList>()
 function RootNavigator() {
   const loading = useAppSelector(selectLoading)
   const isLoggedIn = useAppSelector(selectIsLoggedIn)
-  const dispatch = useAppDispatch()
-
-  useEffect(() => {
-    dispatch(GetSelfAction())
-  }, [])
 
   if (loading == 'loading') {
     return (
@@ -62,25 +64,51 @@ function RootNavigator() {
   }
   return (
     <Stack.Navigator>
-      {isLoggedIn && loading === 'success' ? (
+      {!(isLoggedIn && loading === 'success') ? (
         <>
           <Stack.Screen name="Root" component={RootScreen} options={{ headerShown: false }} />
           <Stack.Screen name="SignIn" component={SignInScreen} options={{ headerShown: false }} />
           <Stack.Screen name="SignUp" component={SignUpScreen} options={{ headerShown: false }} />
-          <Stack.Screen
-            options={{
-              headerTitle: 'Forgot Password',
-            }}
-            name="ForgotPassword"
-            component={ForgotPasswordScreen}
-          />
         </>
       ) : (
         <>
           <Stack.Screen name="Home" component={BottomTabNavigator} options={{ headerShown: false }} />
           <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
           <Stack.Screen name="AddDeviceScreen" component={AddDeviceScreen} options={{ title: 'Add Device' }} />
+          <Stack.Screen name="EditDeviceScreen" component={EditDeviceScreen} options={{ title: 'Edit Device' }} />
+          <Stack.Screen name="ProfileScreen" component={ProfileScreen} options={{ title: 'Profile' }} />
+          <Stack.Screen name="CalendarScreen" component={CalendarScreen} options={{ title: 'Setting' }} />
+          <Stack.Screen
+            name="ChangePasswordScreen"
+            component={ChangePasswordScreen}
+            options={{ title: 'Change Password ' }}
+          />
+          <Stack.Screen
+            name="ChartUsageScreen"
+            component={ChartUsageScreen}
+            options={{ title: 'Time Usage in week' }}
+          />
           <Stack.Screen name="ScanQrCode" component={ScanQrCode} />
+          <Stack.Screen
+            name="ApplicationScreen"
+            component={ListApplicationCard}
+            options={{
+              title: 'Application',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+                fontSize: 20,
+              },
+              headerTitleAlign: 'center',
+            }}
+          />
+          <Stack.Screen
+            options={{
+              headerTitle: 'Forgot Password',
+            }}
+            name="ForgotPasswordScreen"
+            component={ForgotPasswordScreen}
+          />
+
           <Stack.Group screenOptions={{ presentation: 'modal' }}>
             <Stack.Screen name="Modal" component={ModalScreen} />
           </Stack.Group>
@@ -125,8 +153,8 @@ function BottomTabNavigator() {
           title: 'Home',
           headerTitleAlign: 'center',
           headerTintColor: '#333333',
-          // tabBarLabelStyle: { color: mainColor },
-          tabBarIcon: ({ color }) => <MaterialCommunityIcons name="home-analytics" size={28} color={color} />,
+          tabBarLabelStyle: { color: '#333333' },
+          tabBarIcon: ({ color }) => <FontAwesome5 name="home" size={28} color="#333333" />,
           headerRight: () => (
             <Feather
               name="plus-circle"
@@ -139,13 +167,18 @@ function BottomTabNavigator() {
           ),
         })}
       />
+
+      <BottomTab.Screen
+        name="Settings"
+        component={SettingScreen}
+        options={({ navigation }: RootTabScreenProps<'Settings'>) => ({
+          title: 'Setting',
+          headerTitleAlign: 'center',
+          headerTintColor: '#333333',
+          tabBarLabelStyle: { color: '#333333' },
+          tabBarIcon: ({ color }) => <FontAwesome5 name="cog" size={28} color="#333333" />,
+        })}
+      />
     </BottomTab.Navigator>
   )
-}
-
-/**
- * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
- */
-function TabBarIcon(props: { name: React.ComponentProps<typeof Feather>['name']; color: string }) {
-  return <Feather size={25} style={{ marginBottom: -3 }} {...props} />
 }

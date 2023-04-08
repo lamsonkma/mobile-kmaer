@@ -18,12 +18,29 @@ import { registerAction } from '../../reducers/authSlice'
 import { Input } from '@rneui/base'
 const width = Dimensions.get('window').width
 export default function SignUpScreen() {
-  const [username, setUsername] = useState('')
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const dispatch = useAppDispatch()
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
 
   const handleRegister = () => {
-    // Xử lý logic đăng kí tại đây
+    if(!email || !password || !confirm){
+      alert('Please fill all fields')
+      return
+    }
+    if(password !== confirm){
+      alert('Password and confirm password must be the same')
+      return
+    }
+
+    if(emailRegex.test(email) === false){
+      alert('Please enter a valid email')
+      return
+    }
+
+    dispatch(registerAction({ name, email, password }))
   }
 
   return (
@@ -32,7 +49,8 @@ export default function SignUpScreen() {
         <Image source={require('../../assets/images/logo.png')} style={styles.logo} />
       </View>
       <View style={styles.form}>
-        <Input inputStyle={styles.input} placeholder="Username" value={username} onChangeText={setUsername} />
+        <Input inputStyle={styles.input} placeholder="Username" value={name} onChangeText={setName} />
+        <Input inputStyle={styles.input} placeholder="Email" value={email} onChangeText={setEmail} textContentType="emailAddress"  />
         <Input
           placeholder="Password"
           value={password}

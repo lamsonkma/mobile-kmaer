@@ -2,19 +2,19 @@ import { StyleSheet, Text, View, Image, TextInput } from 'react-native'
 import { useAppDispatch } from '../../app/hook'
 import * as ImagePicker from 'expo-image-picker'
 
-import React, { useState } from 'react'
+import React, { FC, useState } from 'react'
 import { Button } from '@rneui/base'
 import { useNavigation } from '@react-navigation/native'
 import { createDeviceAction } from '../../reducers/deviceSlice'
+import { RootStackScreenProps } from '../../types'
 
-const AddDeviceScreen = () => {
-  const nav = useNavigation()
+export const EditDeviceScreen: FC<RootStackScreenProps<'EditDeviceScreen'>> = ({ route, navigation }) => {
+  const device = route.params.device
   const dispatch = useAppDispatch()
-  const [image, setImage] = useState('https://cdn-icons-png.flaticon.com/512/49/49672.png')
-  const [token, setToken] = useState('')
-  const [name, setName] = useState('')
+  const [image, setImage] = useState(device.image || 'https://cdn-icons-png.flaticon.com/512/49/49672.png')
+  const [token, setToken] = useState(device.token)
+  const [name, setName] = useState(device.name)
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -27,7 +27,7 @@ const AddDeviceScreen = () => {
     }
   }
 
-  const btnAddDevice = () => {
+  const btnUpdateDevice = () => {
     console.log(name, image, token)
     dispatch(createDeviceAction({ name, image, token }))
   }
@@ -70,24 +70,23 @@ const AddDeviceScreen = () => {
             buttonStyle={{
               borderRadius: 10,
             }}
-            onPress={() => nav.navigate('ScanQrCode', { setToken })}
+            onPress={() => navigation.navigate('ScanQrCode', { setToken })}
           />
         </View>
         <View style={styles.inputForm}>
-          <Button title="Create device"
-          buttonStyle={{
-            borderRadius: 10,
-            backgroundColor: '#000000',
-          }}
-          onPress={btnAddDevice}
+          <Button
+            title="Update device"
+            buttonStyle={{
+              borderRadius: 10,
+              backgroundColor: '#000000',
+            }}
+            onPress={btnUpdateDevice}
           />
         </View>
       </View>
     </View>
   )
 }
-
-export default AddDeviceScreen
 
 const styles = StyleSheet.create({
   container: {

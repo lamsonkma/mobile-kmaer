@@ -6,6 +6,7 @@
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
 import { CompositeScreenProps, NavigatorScreenParams } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { IApplication, IDevice, IUser } from './constants/interface'
 
 declare global {
   namespace ReactNavigation {
@@ -23,7 +24,13 @@ export type RootStackParamList = {
   Splash: undefined
   AddDeviceScreen: undefined
   ScanQrCode: { setToken(token: string): void }
-  ForgotPassword: undefined
+  ForgotPasswordScreen: undefined
+  ApplicationScreen: { device: IDevice }
+  ChartUsageScreen: { app: IApplication }
+  ProfileScreen: { user: IUser }
+  ChangePasswordScreen: undefined
+  EditDeviceScreen: { device: IDevice }
+  CalendarScreen: undefined
 }
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<
@@ -37,6 +44,7 @@ export type RootTabParamList = {
   CV: undefined
   Application: undefined
   Devices: undefined
+  Settings: undefined
 }
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> = CompositeScreenProps<

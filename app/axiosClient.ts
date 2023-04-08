@@ -7,7 +7,7 @@ import { TOKEN_STORAGE_KEY } from '../constants/storageKey'
 import { Alert } from 'react-native'
 
 export const apiInstance = axios.create({
-  baseURL: '',
+  baseURL: 'http://192.168.1.95:3000/v1',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -39,13 +39,11 @@ apiInstance.interceptors.request.use(async (config) => {
 apiInstance.interceptors.response.use(
   (e) => e,
   (error) => {
-    const { status, message } = error || {}
-    // const errorMessage = `${data.message}`
-    // console.log('abcsa')
-    // console.log('aaa', JSON.stringify(error, null, '\t'))
-    console.log(`Error with status ${status || 500}: ${message}`)
-    // Toast.show(message || 'Some thing wrong happen', { duration: 2000, shadow: false })
-    // Alert.alert(message || 'Some thing wrong happen')
-    // return Promise.reject(new Error(errorMessage))s
+    const { status, data } = error?.response || {}
+    const errorMessage = `${data.message}`
+    console.log(`Error with status ${status}: ${data.message}`)
+    Alert.alert('Error', data.message || 'Some thing wrong happen')
+    Toast.show(data.message || 'Some thing wrong happen', { duration: 2000, shadow: false })
+    return Promise.reject(new Error(errorMessage))
   },
 )
