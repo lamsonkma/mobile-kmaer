@@ -22,7 +22,7 @@ import SignUpScreen from '../screens/LoginScreen/SignUpScreen'
 import HomeScreen from '../screens/Home/HomeScreen'
 
 import { selectIsLoggedIn, selectLoading } from '../reducers/authSlice'
-import { useAppDispatch, useAppSelector } from '../app/hook'
+import { useAppSelector } from '../app/hook'
 import SplashScreen from '../screens/SplashScreen'
 import { GetSelfAction } from '../reducers/userSlice'
 import { useEffect } from 'react'
@@ -36,6 +36,7 @@ import { ProfileScreen } from '../screens/Setting/ProfileScreen'
 import { ChangePasswordScreen } from '../screens/Setting/ChangePasswordScreen'
 import { EditDeviceScreen } from '../screens/Home/EditDeviceScreen'
 import { CalendarScreen } from '../screens/Rule/CalendarScreen'
+import { NewPassWordScreen } from '../screens/LoginScreen/NewPasswordScreen'
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -54,7 +55,6 @@ const Stack = createNativeStackNavigator<RootStackParamList>()
 function RootNavigator() {
   const loading = useAppSelector(selectLoading)
   const isLoggedIn = useAppSelector(selectIsLoggedIn)
-
   if (loading == 'loading') {
     return (
       <Stack.Navigator>
@@ -62,6 +62,7 @@ function RootNavigator() {
       </Stack.Navigator>
     )
   }
+
   return (
     <Stack.Navigator>
       {!(isLoggedIn && loading === 'success') ? (
@@ -69,6 +70,15 @@ function RootNavigator() {
           <Stack.Screen name="Root" component={RootScreen} options={{ headerShown: false }} />
           <Stack.Screen name="SignIn" component={SignInScreen} options={{ headerShown: false }} />
           <Stack.Screen name="SignUp" component={SignUpScreen} options={{ headerShown: false }} />
+          <Stack.Screen
+            options={{
+              headerTitle: 'Forgot Password',
+            }}
+            name="ForgotPasswordScreen"
+            component={ForgotPasswordScreen}
+          />
+
+          <Stack.Screen name="NewPassWordScreen" component={NewPassWordScreen} options={{ title: 'NewPassWord' }} />
         </>
       ) : (
         <>
@@ -77,7 +87,7 @@ function RootNavigator() {
           <Stack.Screen name="AddDeviceScreen" component={AddDeviceScreen} options={{ title: 'Add Device' }} />
           <Stack.Screen name="EditDeviceScreen" component={EditDeviceScreen} options={{ title: 'Edit Device' }} />
           <Stack.Screen name="ProfileScreen" component={ProfileScreen} options={{ title: 'Profile' }} />
-          <Stack.Screen name="CalendarScreen" component={CalendarScreen} options={{ title: 'Setting' }} />
+          <Stack.Screen name="CalendarScreen" component={CalendarScreen} options={{ title: 'Calendar' }} />
           <Stack.Screen
             name="ChangePasswordScreen"
             component={ChangePasswordScreen}
@@ -100,13 +110,6 @@ function RootNavigator() {
               },
               headerTitleAlign: 'center',
             }}
-          />
-          <Stack.Screen
-            options={{
-              headerTitle: 'Forgot Password',
-            }}
-            name="ForgotPasswordScreen"
-            component={ForgotPasswordScreen}
           />
 
           <Stack.Group screenOptions={{ presentation: 'modal' }}>

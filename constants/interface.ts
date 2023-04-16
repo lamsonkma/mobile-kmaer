@@ -43,3 +43,10 @@ export interface IToken extends baseEntity {
 export interface IWeeklyUsage {
   [key: string]: number
 }
+
+export interface IRule extends baseEntity {
+  application: IApplication
+  startTime: string
+  endTime: string
+  enabled: boolean
+}

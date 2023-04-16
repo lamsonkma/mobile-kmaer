@@ -39,14 +39,13 @@ export const loginAction = createAsyncThunk('auth/login', async (payload: ILogin
 })
 export const registerAction = createAsyncThunk('auth/register', async (payload: IRegisterPayload) => {
   const { data } = await apiInstance.post<ILoginSuccessResponse>('auth/register', payload)
-  console.log("🚀 ~ file: authSlice.ts:42 ~ registerAction ~ data:", data)
   return data
 })
 
 export const logoutAction = createAsyncThunk('auth/logout', async () => {
-  await AsyncStorage.removeItem(TOKEN_STORAGE_KEY);
-  await AsyncStorage.removeItem(TOKEN_EXPIRED_STORAGE_KEY);
-});
+  await AsyncStorage.removeItem(TOKEN_STORAGE_KEY)
+  await AsyncStorage.removeItem(TOKEN_EXPIRED_STORAGE_KEY)
+})
 
 export const authSlice = createSlice({
   name: 'auth',
@@ -72,17 +71,16 @@ export const authSlice = createSlice({
         })
     })
     builder
-    .addCase(logoutAction.pending, (state) => {
-      state.loading = 'loading';
-    })
-    .addCase(logoutAction.fulfilled, (state) => {
-      state.isLoggedIn = false;
-      state.loading = 'success';
-    })
-    .addCase(logoutAction.rejected, (state) => {
-      state.loading = 'error';
-    });
-
+      .addCase(logoutAction.pending, (state) => {
+        state.loading = 'loading'
+      })
+      .addCase(logoutAction.fulfilled, (state) => {
+        state.isLoggedIn = false
+        state.loading = 'success'
+      })
+      .addCase(logoutAction.rejected, (state) => {
+        state.loading = 'error'
+      })
   },
 })
 export default authSlice.reducer

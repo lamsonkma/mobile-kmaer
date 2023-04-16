@@ -1,23 +1,57 @@
 import { Alert, Button, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
+import { useAppDispatch, useAppSelector } from '../../app/hook'
+import { useNavigation } from '@react-navigation/native'
+import {
+  ForgotPasswordAction,
+  VerifyOtpAction,
+  selectIsChangePassword,
+  selectIsForgotPassword,
+} from '../../reducers/userSlice'
 
 export const ForgotPasswordScreen = () => {
-  const [phoneNumber, setPhoneNumber] = useState('')
+  const nav = useNavigation()
+  const dispatch = useAppDispatch()
+  const [email, setEmail] = useState('')
   const [otp, setOTP] = useState('')
   const [showOTPInput, setShowOTPInput] = useState(false)
-
+  const isForgotPassword = useAppSelector(selectIsForgotPassword)
+  const isChangePassword = useAppSelector(selectIsChangePassword)
   const sendOTP = () => {
+    if (!email) {
+      Alert.alert('Please enter your email')
+      return
+    }
+    dispatch(ForgotPasswordAction({ email }))
     setShowOTPInput(true)
   }
 
-  const verifyOTP = () => {}
+  useMemo(() => {
+    if (isForgotPassword) {
+      setShowOTPInput(true)
+    }
+  }, [isForgotPassword])
+
+  useMemo(() => {
+    if (isChangePassword) {
+      nav.navigate('NewPassWordScreen')
+    }
+  }, [isChangePassword])
+
+  const verifyBtn = () => {
+    if (!otp) {
+      Alert.alert('Please enter your OTP')
+      return
+    }
+    dispatch(VerifyOtpAction({ email, otp }))
+  }
 
   return (
     <View style={styles.container}>
       {!showOTPInput ? (
         <>
-          <Text style={styles.subtitle}>Enter your phone number to retrieve your password</Text>
-          <TextInput style={styles.input} value={phoneNumber} onChangeText={setPhoneNumber} />
+          <Text style={styles.subtitle}>Please enter your email</Text>
+          <TextInput style={styles.input} value={email} onChangeText={setEmail} />
           <TouchableOpacity style={styles.button} onPress={sendOTP}>
             <Text style={styles.buttonText}>Send OTP</Text>
           </TouchableOpacity>
@@ -28,7 +62,7 @@ export const ForgotPasswordScreen = () => {
             Token has been sent to your email, please check your mailbox (code is valid for up to 5 minutes)
           </Text>
           <TextInput style={styles.input} value={otp} onChangeText={setOTP} />
-          <TouchableOpacity style={styles.button} onPress={verifyOTP}>
+          <TouchableOpacity style={styles.button} onPress={verifyBtn}>
             <Text style={styles.buttonText}>Verify</Text>
           </TouchableOpacity>
         </>

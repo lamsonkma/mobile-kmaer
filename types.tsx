@@ -30,7 +30,8 @@ export type RootStackParamList = {
   ProfileScreen: { user: IUser }
   ChangePasswordScreen: undefined
   EditDeviceScreen: { device: IDevice }
-  CalendarScreen: undefined
+  NewPassWordScreen: undefined
+  CalendarScreen: { app: IApplication; deviceId: number }
 }
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<

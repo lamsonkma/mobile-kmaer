@@ -4,12 +4,14 @@ import authReducer from '../reducers/authSlice'
 import userReducer from '../reducers/userSlice'
 import appReducer from '../reducers/applicationSlice'
 import deviceReducer from '../reducers/deviceSlice'
+import ruleReducer from '../reducers/ruleSlice'
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     user: userReducer,
     appication: appReducer,
     device: deviceReducer,
+    rule: ruleReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

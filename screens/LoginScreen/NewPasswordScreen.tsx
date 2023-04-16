@@ -1,27 +1,40 @@
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { Input } from '@rneui/base'
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import { useAppDispatch, useAppSelector } from '../../app/hook'
-import { selectLoading, UpdateUserAction } from '../../reducers/userSlice'
+import { NewPassWordAction, selectLoading } from '../../reducers/userSlice'
 import SplashScreen from '../SplashScreen'
 import Toast from 'react-native-root-toast'
 const width = Dimensions.get('window').width
-export const ChangePasswordScreen = () => {
+export const NewPassWordScreen = () => {
+  const navigator = useNavigation()
   const loading = useAppSelector(selectLoading)
-  const nav = useNavigation()
   const dispatch = useAppDispatch()
   const [newPassWord, setNewPassWord] = useState('')
-  const [oldPassWord, setOldPassWord] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
 
   const handleChangePassword = () => {
-    if (!newPassWord || !oldPassWord) {
-      alert('Please enter your password')
+    if (!newPassWord || !confirmPassword) {
+      Alert.alert('Please enter full information')
       return
     }
-    dispatch(UpdateUserAction({ newPassWord, oldPassWord }))
-    nav.goBack()
+
+    if (newPassWord !== confirmPassword) {
+      Alert.alert('Password not match')
+      return
+    }
+
+    dispatch(
+      NewPassWordAction({
+        password: newPassWord,
+        confirmPassword,
+      }),
+    )
+
+    navigator.navigate('SignIn')
+
     Toast.show('Change password success', {
       duration: 100,
       position: 90,
@@ -37,27 +50,16 @@ export const ChangePasswordScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.form}>
-        <Input inputStyle={styles.input} placeholder="Password" value={oldPassWord} onChangeText={setOldPassWord} />
-        <Input placeholder="New Password" value={newPassWord} onChangeText={setNewPassWord} inputStyle={styles.input} />
+        <Input inputStyle={styles.input} placeholder="New Password" value={newPassWord} onChangeText={setNewPassWord} />
+        <Input
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+          inputStyle={styles.input}
+        />
       </View>
-      <TouchableOpacity
-        onPress={() => nav.navigate('ForgotPasswordScreen')}
-        style={{
-          width: '90%',
-          alignItems: 'flex-end',
-        }}
-      >
-        <Text
-          style={{
-            textDecorationLine: 'underline',
-            color: '#000',
-          }}
-        >
-          Forgot Password
-        </Text>
-      </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={handleChangePassword}>
-        <Text style={styles.buttonText}>Change</Text>
+        <Text style={styles.buttonText}>Update</Text>
       </TouchableOpacity>
     </View>
   )
