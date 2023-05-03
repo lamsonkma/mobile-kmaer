@@ -3,18 +3,26 @@ import { apiInstance } from '../app/axiosClient'
 import { RootState } from '../app/store'
 import { IDevice } from '../constants/interface'
 
-export const createDeviceAction = createAsyncThunk('device/create', async (payload: IDevice) => {
+export const createDeviceAction = createAsyncThunk('device/create', async (payload: IDevice, thunkAPI) => {
   const { data } = await apiInstance.post('/device', payload)
+  thunkAPI.dispatch(getDeviceByMeAction())
   return data
 })
 
-export const updateDeviceAction = createAsyncThunk('device/update', async (payload: IDevice) => {
-  const { data } = await apiInstance.put('/device', payload)
+export const updateDeviceAction = createAsyncThunk('device/update', async (payload: IDevice, thunkAPI) => {
+  const { data } = await apiInstance.patch(`/device/${payload.id}`, payload)
+  thunkAPI.dispatch(getDeviceByMeAction())
   return data
 })
 
 export const getDeviceByMeAction = createAsyncThunk('device/get', async () => {
   const { data } = await apiInstance.get('/device/me')
+  return data
+})
+
+export const deleteDeviceFromUser = createAsyncThunk('device/user', async (deviceId: number, thunkAPI) => {
+  const { data } = await apiInstance.delete(`/device/${deviceId}`)
+  thunkAPI.dispatch(getDeviceByMeAction())
   return data
 })
 
@@ -57,6 +65,28 @@ export const deviceSlice = createSlice({
       .addCase(getDeviceByMeAction.rejected, (state, action) => {
         state.loading = 'error'
         state.error = action.error.message
+      })
+
+    builder
+      .addCase(updateDeviceAction.pending, (state, action) => {
+        state.loading = 'loading'
+      })
+      .addCase(updateDeviceAction.fulfilled, (state, action) => {
+        state.loading = 'success'
+      })
+      .addCase(updateDeviceAction.rejected, (state, action) => {
+        state.loading = 'error'
+      })
+
+    builder
+      .addCase(deleteDeviceFromUser.pending, (state, action) => {
+        state.loading = 'loading'
+      })
+      .addCase(deleteDeviceFromUser.fulfilled, (state, action) => {
+        state.loading = 'success'
+      })
+      .addCase(deleteDeviceFromUser.rejected, (state, action) => {
+        state.loading = 'error'
       })
   },
 })

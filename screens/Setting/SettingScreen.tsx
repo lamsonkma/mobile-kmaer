@@ -103,28 +103,6 @@ export const SettingScreen = () => {
                 </View>
                 <Icon name="angle-right" type="font-awesome" style={{ flex: 1 }} color="#333333" />
               </TouchableOpacity>
-
-              <TouchableOpacity style={styles.item} activeOpacity={0.8} onPress={() => nav.navigate('CalendarScreen')}>
-                <View
-                  style={{
-                    borderRadius: 5,
-                    padding: 5,
-                    width: 30,
-                    height: 30,
-                  }}
-                >
-                  <Icon name="calendar" type="font-awesome" color="#333333" size={20} solid={true} />
-                </View>
-                <View
-                  style={{
-                    flex: 2,
-                    marginLeft: 30,
-                  }}
-                >
-                  <Text style={styles.text}>Calendar</Text>
-                </View>
-                <Icon name="angle-right" type="font-awesome" style={{ flex: 1 }} color="#333333" />
-              </TouchableOpacity>
             </View>
           </View>
           <View>

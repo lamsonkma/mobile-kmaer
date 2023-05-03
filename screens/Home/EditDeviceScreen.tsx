@@ -5,7 +5,7 @@ import * as ImagePicker from 'expo-image-picker'
 import React, { FC, useState } from 'react'
 import { Button } from '@rneui/base'
 import { useNavigation } from '@react-navigation/native'
-import { createDeviceAction } from '../../reducers/deviceSlice'
+import { updateDeviceAction } from '../../reducers/deviceSlice'
 import { RootStackScreenProps } from '../../types'
 
 export const EditDeviceScreen: FC<RootStackScreenProps<'EditDeviceScreen'>> = ({ route, navigation }) => {
@@ -29,7 +29,7 @@ export const EditDeviceScreen: FC<RootStackScreenProps<'EditDeviceScreen'>> = ({
 
   const btnUpdateDevice = () => {
     console.log(name, image, token)
-    dispatch(createDeviceAction({ name, image, token }))
+    dispatch(updateDeviceAction({ id: device.id, name, image, token }))
   }
 
   return (

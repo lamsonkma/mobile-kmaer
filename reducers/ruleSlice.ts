@@ -32,10 +32,14 @@ export const updateRuleAction = createAsyncThunk('rule/update', async (payload: 
   return data
 })
 
-export const deleteRuleAction = createAsyncThunk('rule/delete', async (id: number, thunkAPI) => {
-  const { data } = await apiInstance.delete(`/rule/${id}`)
-  return data
-})
+export const deleteRuleAction = createAsyncThunk(
+  'rule/delete',
+  async (payload: { id: number; deviceId: number }, thunkAPI) => {
+    const { data } = await apiInstance.delete(`/rule/${payload.id}`)
+    thunkAPI.dispatch(GetAllRuleAction(payload.deviceId))
+    return data
+  },
+)
 
 interface RuleState {
   rules: IRule[]

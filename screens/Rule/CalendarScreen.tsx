@@ -6,8 +6,9 @@ import DropDownPicker from 'react-native-dropdown-picker'
 import { Button, Input } from '@rneui/base'
 import { RootStackScreenProps } from '../../types'
 import { useAppDispatch, useAppSelector } from '../../app/hook'
-import { GetAllRuleAction, createRuleAction, selectRule } from '../../reducers/ruleSlice'
+import { GetAllRuleAction, createRuleAction, deleteRuleAction, selectRule } from '../../reducers/ruleSlice'
 import Toast from 'react-native-root-toast'
+import { FontAwesome5 } from '@expo/vector-icons'
 LocaleConfig.locales['en'] = {
   monthNames: [
     'January',
@@ -150,6 +151,17 @@ export const CalendarScreen: FC<RootStackScreenProps<'CalendarScreen'>> = ({ nav
     setVisibleLongPress(true)
   }
 
+  const btnDeleteRule = (id: number) => {
+    dispatch(deleteRuleAction({ id, deviceId }))
+    Toast.show('Delete Rule Success', {
+      duration: 100,
+      position: 90,
+      animation: true,
+      hideOnPress: true,
+    })
+    setVisibleLongPress(false)
+  }
+
   return (
     <View>
       <Calendar
@@ -254,7 +266,7 @@ export const CalendarScreen: FC<RootStackScreenProps<'CalendarScreen'>> = ({ nav
                       const timeStart = dayjs(parseInt(rule.startTime)).format('HH:mm')
                       const timeEnd = dayjs(parseInt(rule.endTime)).format('HH:mm')
                       return (
-                        <View style={styles.rule} key= {rule.id}>
+                        <View style={styles.rule} key={rule.id}>
                           <Image
                             source={{
                               uri: rule.application.image || 'https://cdn-icons-png.flaticon.com/512/49/49672.png',
@@ -267,6 +279,13 @@ export const CalendarScreen: FC<RootStackScreenProps<'CalendarScreen'>> = ({ nav
                             <Text style={styles.name}>{timeStart}</Text>
                             <Text style={styles.name}>{timeEnd}</Text>
                           </View>
+                          {rule ? (
+                            <TouchableOpacity onPress={() => btnDeleteRule(rule.id || 1)}>
+                              <FontAwesome5 name="trash" size={28} color="#333333" />
+                            </TouchableOpacity>
+                          ) : (
+                            <></>
+                          )}
                         </View>
                       )
                     })}

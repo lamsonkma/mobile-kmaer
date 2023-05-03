@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from '../../app/hook'
 import { uploadImage } from '../../app/cloudinary'
 import SplashScreen from '../SplashScreen'
 import { RootStackScreenProps } from '../../types'
-import { UpdateUserProfileAction } from '../../reducers/userSlice'
+import { UpdateUserAction } from '../../reducers/userSlice'
 import Toast from 'react-native-root-toast'
 
 export const ProfileScreen: FC<RootStackScreenProps<'ProfileScreen'>> = ({ navigation, route }) => {
@@ -22,7 +22,7 @@ export const ProfileScreen: FC<RootStackScreenProps<'ProfileScreen'>> = ({ navig
       alert('Please enter your name')
       return
     }
-    dispatch(UpdateUserProfileAction({ name }))
+    dispatch(UpdateUserAction({ name }))
     Toast.show('Update profile successfully', {
       duration: 100,
       position: 90,

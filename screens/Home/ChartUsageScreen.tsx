@@ -80,7 +80,7 @@ export const ChartUsageScreen: FC<RootStackScreenProps<'ChartUsageScreen'>> = ({
           alignItems: 'center',
         }}
       >
-        <Button
+        {/* <Button
           title="Limit time usage"
           titleStyle={{
             flexWrap: 'wrap',
@@ -90,7 +90,7 @@ export const ChartUsageScreen: FC<RootStackScreenProps<'ChartUsageScreen'>> = ({
             borderRadius: 10,
             width: 200,
           }}
-        />
+        /> */}
       </View>
     </View>
   )

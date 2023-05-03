@@ -6,7 +6,7 @@ import { primaryColor } from '../constants/Colors'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { IDevice } from '../constants/interface'
 import { useAppDispatch, useAppSelector } from '../app/hook'
-import { getDeviceByMeAction, selectDevices } from '../reducers/deviceSlice'
+import { deleteDeviceFromUser, getDeviceByMeAction, selectDevices } from '../reducers/deviceSlice'
 import { Icon } from '@rneui/base'
 
 interface IDeviceProps {
@@ -63,9 +63,15 @@ interface IPopUpDeviceProps {
 }
 
 export const PopUpDevice: FC<IPopUpDeviceProps> = ({ setVisible, visible, device, navigation }) => {
+  const dispatch = useAppDispatch()
+
   const btnUpdate = () => {
     setVisible(false)
     navigation.navigate('EditDeviceScreen', { device })
+  }
+
+  const btnDelete = (id: number) => {
+    dispatch(deleteDeviceFromUser(id))
   }
 
   return (
@@ -75,7 +81,7 @@ export const PopUpDevice: FC<IPopUpDeviceProps> = ({ setVisible, visible, device
           <TouchableOpacity style={styles.itemPopUp} onPress={btnUpdate}>
             <Text>Edit</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.itemPopUp}>
+          <TouchableOpacity style={styles.itemPopUp} onPress={() => btnDelete(device.id || 0)}>
             <Text>Delete</Text>
           </TouchableOpacity>
           <TouchableOpacity style={{ ...styles.itemPopUp, borderBottomWidth: 0 }} onPress={() => setVisible(false)}>
