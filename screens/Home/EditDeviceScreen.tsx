@@ -7,6 +7,8 @@ import { Button } from '@rneui/base'
 import { useNavigation } from '@react-navigation/native'
 import { updateDeviceAction } from '../../reducers/deviceSlice'
 import { RootStackScreenProps } from '../../types'
+import Toast from 'react-native-root-toast'
+import { uploadImage } from '../../app/cloudinary'
 
 export const EditDeviceScreen: FC<RootStackScreenProps<'EditDeviceScreen'>> = ({ route, navigation }) => {
   const device = route.params.device
@@ -20,16 +22,26 @@ export const EditDeviceScreen: FC<RootStackScreenProps<'EditDeviceScreen'>> = ({
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
+      base64: true,
     })
 
     if (!result.cancelled) {
-      setImage(result.uri)
+      const { secure_url: newImageUrl } = await uploadImage(result)
+      console.log(newImageUrl)
+      setImage(newImageUrl)
     }
   }
 
   const btnUpdateDevice = () => {
     console.log(name, image, token)
     dispatch(updateDeviceAction({ id: device.id, name, image, token }))
+    Toast.show('Update device successfully', {
+      duration: 100,
+      position: 90,
+      animation: true,
+      hideOnPress: true,
+    })
+    navigation.goBack()
   }
 
   return (
@@ -54,13 +66,7 @@ export const EditDeviceScreen: FC<RootStackScreenProps<'EditDeviceScreen'>> = ({
             }}
           />
         </View>
-        <View style={styles.inputForm}>
-          <Text style={styles.name}>Token</Text>
-          <TextInput
-            style={{ ...styles.input, marginRight: 5 }}
-            value={token}
-            onChangeText={(text) => setToken(text)}
-          />
+        {/* <View style={styles.inputForm}>
           <Button
             title="Scan QR"
             titleStyle={{
@@ -72,7 +78,7 @@ export const EditDeviceScreen: FC<RootStackScreenProps<'EditDeviceScreen'>> = ({
             }}
             onPress={() => navigation.navigate('ScanQrCode', { setToken })}
           />
-        </View>
+        </View> */}
         <View style={styles.inputForm}>
           <Button
             title="Update device"

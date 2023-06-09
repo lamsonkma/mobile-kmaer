@@ -123,7 +123,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#FFF',
     textTransform: 'capitalize',
-    fontFamily: 'SansPro',
   },
   avatar: {
     width: 100,
@@ -143,7 +142,6 @@ const styles = StyleSheet.create({
   textTitle: {
     fontSize: 18,
     color: '#000000',
-    fontFamily: 'SansPro',
     marginBottom: 5,
   },
   groupButton: {

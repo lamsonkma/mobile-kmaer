@@ -7,17 +7,23 @@ import { mainColor } from '../../constants/Colors'
 import { useAppDispatch, useAppSelector } from '../../app/hook'
 import { RootStackScreenProps } from '../../types'
 import { logoutAction } from '../../reducers/authSlice'
-import { GetSelfAction, selectUser } from '../../reducers/userSlice'
+import { GetSelfAction, UpdateUserAction, selectUser } from '../../reducers/userSlice'
 import SplashScreen from '../SplashScreen'
+import * as ImagePicker from 'expo-image-picker'
+import { uploadImage } from '../../app/cloudinary'
 
 export const SettingScreen = () => {
   const nav = useNavigation()
   const dispatch = useAppDispatch()
   const user = useAppSelector(selectUser)
-
+  const [image, setImage] = React.useState(user?.image)
   useEffect(() => {
     dispatch(GetSelfAction())
   }, [])
+
+  // useEffect(() => {
+  //   setImage(user?.image)
+  // }, [user])
 
   const handleLogout = () => {
     Alert.alert('Đăng xuất', 'Bạn có chắc muốn đăng xuất?', [
@@ -29,6 +35,33 @@ export const SettingScreen = () => {
     ])
   }
 
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+      base64: true,
+    })
+
+    if (!result.cancelled) {
+      const { secure_url: newImageUrl } = await uploadImage(result)
+      dispatch(UpdateUserAction({ image: newImageUrl }))
+      setImage(newImageUrl)
+    }
+  }
+
+
+  const updateAvatar = () => {
+    Alert.alert('Update avater', 'You want to update avatar?', [
+      { text: 'Yes', onPress: pickImage },
+      {
+        text: 'No',
+        style: 'cancel',
+      },
+    ])
+  }
   if (!user) return <SplashScreen />
 
   return (
@@ -43,9 +76,10 @@ export const SettingScreen = () => {
       >
         <Image
           source={{
-            uri: 'https://bloganchoi.com/wp-content/uploads/2021/08/avatar-vit-vang-trend-15.jpg',
+            uri: user.image,
           }}
           style={styles.avatar}
+          onPress={() => updateAvatar()}
         />
         <View>
           <Text style={styles.text}>{user?.name}</Text>

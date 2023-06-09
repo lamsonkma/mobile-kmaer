@@ -6,6 +6,8 @@ import React, { useState } from 'react'
 import { Button } from '@rneui/base'
 import { useNavigation } from '@react-navigation/native'
 import { createDeviceAction } from '../../reducers/deviceSlice'
+import Toast from 'react-native-root-toast'
+import { uploadImage } from '../../app/cloudinary'
 
 const AddDeviceScreen = () => {
   const nav = useNavigation()
@@ -20,16 +22,25 @@ const AddDeviceScreen = () => {
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
+      base64: true,
     })
 
     if (!result.cancelled) {
-      setImage(result.uri)
+      const { secure_url: newImageUrl } = await uploadImage(result)
+      setImage(newImageUrl)
     }
   }
 
   const btnAddDevice = () => {
-    console.log(name, image, token)
     dispatch(createDeviceAction({ name, image, token }))
+
+    Toast.show('Create device successfully', {
+      duration: 100,
+      position: 90,
+      animation: true,
+      hideOnPress: true,
+    })
+    nav.goBack()
   }
 
   return (
@@ -74,12 +85,13 @@ const AddDeviceScreen = () => {
           />
         </View>
         <View style={styles.inputForm}>
-          <Button title="Create device"
-          buttonStyle={{
-            borderRadius: 10,
-            backgroundColor: '#000000',
-          }}
-          onPress={btnAddDevice}
+          <Button
+            title="Create device"
+            buttonStyle={{
+              borderRadius: 10,
+              backgroundColor: '#000000',
+            }}
+            onPress={btnAddDevice}
           />
         </View>
       </View>

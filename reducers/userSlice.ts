@@ -21,7 +21,8 @@ interface IUserState {
 interface IUpdateUserPayload {
   name?: string
   oldPassWord?: string
-  newPassWord?: string
+  newPassWord?: string,
+  image?: string
 }
 
 const initialState: IUserState = {

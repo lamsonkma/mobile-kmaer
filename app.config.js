@@ -3,8 +3,8 @@ config()
 
 module.exports = {
   expo: {
-    name: 'recruiter-portal-mobile',
-    slug: 'recruiter-portal-mobile',
+    name: 'mobile-kmaer',
+    slug: 'mobile-kmaer',
     version: '1.0.0',
     orientation: 'portrait',
     icon: './assets/images/icon.png',

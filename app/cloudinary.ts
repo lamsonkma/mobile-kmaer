@@ -13,7 +13,7 @@ export const makeUploadFormData = (photo: ImageInfo) => {
 
 export const uploadImage = (photo: ImageInfo) => {
   const data = makeUploadFormData(photo)
-  return fetch(`https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/upload`, {
+  return fetch(`https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/image/upload`, {
     method: 'post',
     body: data,
   }).then((res) => res.json())

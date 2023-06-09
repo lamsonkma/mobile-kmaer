@@ -27,7 +27,8 @@ interface IAuthState {
   error?: string
 }
 interface IRegisterPayload extends ILoginPayload {
-  name: string
+  name: string,
+  image?: string
 }
 const initialState: IAuthState = {
   isLoggedIn: false,

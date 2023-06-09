@@ -7,7 +7,7 @@ export interface baseEntity {
 export interface IUser extends baseEntity {
   email: string
   name: string
-  avatar?: string
+  image?: string
 }
 
 export interface IPagination {
